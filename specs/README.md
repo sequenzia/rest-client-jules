@@ -4,7 +4,7 @@
 
 ## 1. Overview
 
-This document defines the requirements for a Python client library that interfaces with REST API endpoints. The client should provide a clean, Pythonic interface for consuming HTTP-based services with support for both synchronous and asynchronous operations.
+This document defines the requirements for a Python client library named `rest-client` that interfaces with REST API endpoints. The client should provide a clean, Pythonic interface for consuming HTTP-based services with support for both synchronous and asynchronous operations.
 
 This specification serves as the authoritative guideline for both human software engineers and AI coding agents implementing the library.
 
@@ -267,7 +267,7 @@ Half-Open --[failure]--> Open
 #### Configuration
 
 ```python
-from mypackage import Client, CircuitBreakerConfig
+from rest_client import Client, CircuitBreakerConfig
 
 client = Client(
     base_url="https://api.example.com",
@@ -308,7 +308,7 @@ client.circuit_breaker.force_close()
 client.circuit_breaker.reset()
 
 # Fallback when circuit is open
-from mypackage import CircuitBreakerConfig
+from rest_client import CircuitBreakerConfig
 
 def fallback_handler(request):
     return CachedResponse(...)  # Return cached/default response
@@ -598,7 +598,7 @@ The client must implement intelligent rate limiting to prevent server overload a
 #### Configuration
 
 ```python
-from mypackage import Client, RateLimitConfig
+from rest_client import Client, RateLimitConfig
 
 client = Client(
     base_url="https://api.example.com",
@@ -650,7 +650,7 @@ The client must implement HTTP-compliant response caching to reduce latency and 
 #### Cache Configuration
 
 ```python
-from mypackage import Client, CacheConfig, DiskCache, MemoryCache
+from rest_client import Client, CacheConfig, DiskCache, MemoryCache
 
 # Memory cache (default)
 client = Client(
@@ -708,7 +708,7 @@ The client must provide a composable middleware architecture for extending reque
 Middleware components follow a consistent interface enabling request preprocessing, response postprocessing, and error handling:
 
 ```python
-from mypackage import Middleware, Request, Response
+from rest_client import Middleware, Request, Response
 from typing import Callable, Awaitable
 
 class MyMiddleware(Middleware):
@@ -750,7 +750,7 @@ The library should provide common middleware implementations:
 #### Configuration
 
 ```python
-from mypackage import Client, LoggingMiddleware, MetricsMiddleware
+from rest_client import Client, LoggingMiddleware, MetricsMiddleware
 
 class CustomHeaderMiddleware(Middleware):
     def __init__(self, headers: dict):
@@ -810,7 +810,7 @@ Support for common pagination patterns with automatic detection where possible:
 #### Iterator Interface
 
 ```python
-from mypackage import Client, PaginationConfig
+from rest_client import Client, PaginationConfig
 
 client = Client(base_url="https://api.example.com")
 
@@ -832,7 +832,7 @@ for user in client.paginate("/users", response_model=User):
 #### Pagination Configuration
 
 ```python
-from mypackage import PaginationConfig, OffsetLimitPagination, CursorPagination
+from rest_client import PaginationConfig, OffsetLimitPagination, CursorPagination
 
 # Offset/limit pagination
 config = OffsetLimitPagination(
@@ -887,7 +887,7 @@ for user in client.paginate("/users", start_offset=500):
 #### Custom Pagination Handler
 
 ```python
-from mypackage import PaginationStrategy
+from rest_client import PaginationStrategy
 
 class CustomPagination(PaginationStrategy):
     def get_next_request(self, response, current_params):
@@ -958,12 +958,12 @@ Enhanced functionality via extras:
 Optional dependencies installable via extras:
 
 ```bash
-pip install mypackage              # Core only
-pip install mypackage[fast]        # Includes orjson
-pip install mypackage[http2]       # Includes h2
-pip install mypackage[socks]       # Includes httpx-socks
-pip install mypackage[tracing]     # Includes opentelemetry packages
-pip install mypackage[all]         # All optional dependencies
+pip install rest_client              # Core only
+pip install rest_client[fast]        # Includes orjson
+pip install rest_client[http2]       # Includes h2
+pip install rest_client[socks]       # Includes httpx-socks
+pip install rest_client[tracing]     # Includes opentelemetry packages
+pip install rest_client[all]         # All optional dependencies
 ```
 
 ### 15.4 Dependency Management
@@ -1097,7 +1097,7 @@ Features for future releases:
 ### 18.1 Simple Synchronous Usage
 
 ```python
-from mypackage import Client
+from rest_client import Client
 
 client = Client(
     base_url="https://api.example.com",
@@ -1119,7 +1119,7 @@ client.close()
 ### 18.2 Asynchronous Usage
 
 ```python
-from mypackage import AsyncClient
+from rest_client import AsyncClient
 
 async def main():
     async with AsyncClient(base_url="https://api.example.com") as client:
@@ -1151,7 +1151,7 @@ with client.stream("GET", "/large-file.zip") as response:
 ### 18.4 Error Handling
 
 ```python
-from mypackage import Client, HTTPError, RateLimitError, TimeoutError
+from rest_client import Client, HTTPError, RateLimitError, TimeoutError
 
 client = Client(base_url="https://api.example.com", auth=("bearer", "token"))
 
@@ -1173,7 +1173,7 @@ finally:
 
 ```python
 from pydantic import BaseModel, EmailStr
-from mypackage import AsyncClient
+from rest_client import AsyncClient
 
 class User(BaseModel):
     id: int
@@ -1201,7 +1201,7 @@ async with AsyncClient(base_url="https://api.example.com") as client:
 ### 18.6 Custom Configuration
 
 ```python
-from mypackage import Client, RetryConfig, TimeoutConfig
+from rest_client import Client, RetryConfig, TimeoutConfig
 
 client = Client(
     base_url="https://api.example.com",
@@ -1273,7 +1273,7 @@ client = Client(
 ### 18.8 Circuit Breaker Usage
 
 ```python
-from mypackage import Client, CircuitBreakerConfig, CircuitBreakerOpenError
+from rest_client import Client, CircuitBreakerConfig, CircuitBreakerOpenError
 
 client = Client(
     base_url="https://api.example.com",
@@ -1299,7 +1299,7 @@ if client.circuit_breaker.state == "half_open":
 ### 18.9 Rate Limiting Usage
 
 ```python
-from mypackage import Client, RateLimitConfig, RateLimitError
+from rest_client import Client, RateLimitConfig, RateLimitError
 
 # Client-side rate limiting to avoid overwhelming the API
 client = Client(
@@ -1329,7 +1329,7 @@ except RateLimitError as e:
 ### 18.10 Response Caching Usage
 
 ```python
-from mypackage import Client, CacheConfig, MemoryCache
+from rest_client import Client, CacheConfig, MemoryCache
 
 client = Client(
     base_url="https://api.example.com",
@@ -1361,7 +1361,7 @@ print(f"Cache size: {stats.size} entries")
 ### 18.11 Pagination Usage
 
 ```python
-from mypackage import Client, OffsetLimitPagination
+from rest_client import Client, OffsetLimitPagination
 from mymodels import User
 
 client = Client(base_url="https://api.example.com")
@@ -1396,7 +1396,7 @@ for user in client.paginate("/users"):
 ### 18.12 Middleware Usage
 
 ```python
-from mypackage import Client, Middleware, LoggingMiddleware
+from rest_client import Client, Middleware, LoggingMiddleware
 import time
 
 class TimingMiddleware(Middleware):
