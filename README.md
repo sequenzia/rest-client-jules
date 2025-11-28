@@ -1,1 +1,1 @@
-# rest-client-jules
+# Python REST Client

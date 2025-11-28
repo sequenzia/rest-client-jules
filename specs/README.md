@@ -1,4 +1,4 @@
-# Python REST Client API - Requirements Specification
+# Python REST Client - Requirements Specification
 
 ---
 
